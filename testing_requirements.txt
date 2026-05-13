@@ -1,0 +1,35 @@
+=========================================================
+PROJECT SHIVAM: INFRASTRUCTURE TESTING REQUIREMENTS
+=========================================================
+
+ARCHITECTURE SUMMARY:
+- 3 Virtual Machines (VM-1, VM-2, VM-3)
+- 3 Virtual Networks (vnet-1, vnet-2, vnet-3)
+- Peering Topology: VNet-1 <--> VNet-2 <--> VNet-3
+- Security Rule: Non-Transitive (VNet-1 CANNOT talk to VNet-3)
+
+---------------------------------------------------------
+TEST 1: VERIFY CONNECTIVITY (SUCCESS EXPECTED)
+---------------------------------------------------------
+Requirement: Prove that VM-1 can successfully communicate with VM-2 because their VNets are directly peered.
+
+Steps:
+1. Log into VM-1 using SSH:
+   ssh -i my-project_key.pem azureuser@135.235.192.105
+
+2. Once logged in, run the ping command to VM-2's private IP:
+   ping 10.2.0.4
+
+Result: You should see packets returning successfully (e.g., "64 bytes from 10.2.0.4..."). Press Ctrl+C to stop the ping.
+
+---------------------------------------------------------
+TEST 2: VERIFY NON-TRANSITIVE SECURITY (FAILURE EXPECTED)
+---------------------------------------------------------
+Requirement: Prove that VM-1 is strictly blocked from communicating with VM-3, proving the non-transitive network isolation is working.
+
+Steps:
+1. Stay logged into VM-1.
+2. Run the ping command to VM-3's private IP:
+   ping 10.3.0.4
+
+Result: The command will freeze and you will see 100% packet loss. This successfully proves the security boundary is working! Press Ctrl+C to stop.
